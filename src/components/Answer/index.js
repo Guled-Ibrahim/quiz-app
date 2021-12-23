@@ -1,13 +1,49 @@
-const Answer = ({ answer, order, toggleShow }) => {
+import { useState } from 'react';
+
+const Answer = ({ answer, order, icon, toggleActive, className, ...props }) => {
+  const [active, isActive] = useState(false);
+
   return (
     <button
+      className={className}
       onClick={(e) => {
-        toggleShow(true);
+        if (icon === 'check') {
+          e.target.classList.add(
+            'border-green-500',
+            'bg-green-500',
+            'text-white'
+          );
+          e.target.classList.remove(
+            'border-purple-500',
+            'text-purple-400',
+            'text-purple'
+          );
+        } else {
+          e.target.classList.add('border-red-500', 'bg-red-500', 'text-white');
+          e.target.classList.remove('border-purple-500', 'text-purple-400');
+        }
+        isActive(true);
       }}
-      className='lg:text-left lg:mx-4 lg:text-purple-600 lg:border-2 lg:border-purple-500 lg:hover:bg-orange-400 lg:hover:text-white lg:py-4 lg:my-4 lg:rounded-md lg:hover:border-orange-400 lg:capitalize'
     >
-      <span className='lg:font-extrabold lg:ml-4 lg:mr-12'>{order}</span>
-      {answer}
+      <span
+        className={
+          active
+            ? 'mx-2 font-extrabold text-lg capitalize pointer-events-none'
+            : 'mx-2 font-extrabold text-lg capitalize pointer-events-none'
+        }
+      >
+        {order}
+      </span>
+      <span
+        className={
+          active
+            ? 'capitalize text-lg pointer-events-none'
+            : 'capitalize text-lg self-center flex-1 pointer-events-none'
+        }
+      >
+        {answer}
+      </span>
+      {active && <i className={`far fa-${icon}-circle fa-lg`}></i>}
     </button>
   );
 };

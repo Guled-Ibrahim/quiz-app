@@ -1,37 +1,49 @@
-import background from './assets/background.png';
-import man from './assets/man.svg';
+import Background from './assets/background.png';
+import Man from './assets/man.svg';
 import Answer from './components/Answer';
 import { useState, useEffect } from 'react';
 import ClipLoader from 'react-spinners/ClipLoader';
-import axios from 'axios';
+import Axios from 'axios';
+import Random from 'no-duplicates';
+import countryList from './data/index';
+import shuffle from 'shuffle-array';
 
 function App() {
-  const [loading, isLoading] = useState(false);
-  const [countryList, setCountryList] = useState([
-    'peru',
-    'morocco',
-    'finland',
-    'russia',
-    'japan',
-  ]);
-  const [index, setIndex] = useState(1);
+  const [loading, isLoading] = useState(true);
   const [country, setCountry] = useState();
   const [city, setCity] = useState();
-  const [showButton, isShowButton] = useState(false);
+  const [active, isActive] = useState(false);
+  const [index, setIndex] = useState(1);
+  const [answers, setAnswers] = useState([]);
+
+  const orderList = {
+    1: 'a',
+    2: 'b',
+    3: 'c',
+    4: 'd',
+  };
+
+  const randomCountry = Random(countryList);
 
   useEffect(() => {
-    axios
-      .get(`https://restcountries.com/v3.1/name/${countryList[index]}`)
-      .then(({ data }) => {
+    setAnswers([]);
+    Axios.get(`https://restcountries.com/v3.1/name/${randomCountry()}`).then(
+      ({ data }) => {
         setCity(data[0].capital[0]);
-        setCountry(countryList[index]);
-      });
+        setCountry(data[0].name.common);
+        setAnswers((prev) => [data[0].name.common, ...prev]);
+        for (let i = 0; i < 3; i++) {
+          setAnswers((prev) => [randomCountry(), ...prev]);
+        }
+        isLoading(false);
+      }
+    );
   }, [index]);
 
   return (
     <div
       style={{
-        backgroundImage: `url(${background})`,
+        backgroundImage: `url(${Background})`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -45,34 +57,112 @@ function App() {
           <p className='capitalize lg:font-extrabold text-white lg:text-3xl lg:absolute lg:-top-12 lg:left-0'>
             Country quiz
           </p>
-          <img src={man} alt='' className='lg:absolute lg:-top-24 right-0' />
+          <img src={Man} alt='' className='lg:absolute lg:-top-24 right-0' />
           <div className='lg:flex lg:flex-col lg:mx-2 lg:mb-4'>
             <p className='text-purple-900 lg:font-extrabold lg:text-2xl lg:mt-12 lg:ml-4 lg:mb-8'>
               {`${city} is the capital city of`}
             </p>
-            <div className='lg:flex lg:flex-col'>
-              <Answer
-                answer={country}
-                order={'A'}
-                toggleShow={(toggle) => isShowButton(toggle)}
-              />
-              <Answer answer={'malaysia'} order={'B'} />
-              <Answer answer={'sweden'} order={'C'} />
-              <Answer answer={'austria'} order={'D'} />
+            <div className='flex flex-col'>
+              {shuffle(answers).map((answer, index) => {
+                return country === answer ? (
+                  <Answer
+                    key={index}
+                    icon={'check'}
+                    order={orderList[index + 1]}
+                    answer={answer}
+                    className={
+                      active
+                        ? `flex justify-between border-2 rounded-lg py-4 px-4 items-center mx-4 my-2`
+                        : `flex border-2 border-purple-500 rounded-lg py-4 px-4 text-purple-400 items-center mx-4 my-2`
+                    }
+                  />
+                ) : (
+                  <Answer
+                    key={index}
+                    icon={'times'}
+                    order={orderList[index + 1]}
+                    answer={answer}
+                    className={
+                      active
+                        ? `flex justify-between border-2 border-red-500 bg-red-500 rounded-lg py-4 px-4 text-white items-center mx-4 my-2`
+                        : `flex border-2 border-purple-500 rounded-lg py-4 px-4 text-purple-400 items-center mx-4 my-2`
+                    }
+                  />
+                );
+              })}
             </div>
-            {showButton && (
-              <button
-                onClick={() => setIndex((prev) => prev + 1)}
-                className='lg:bg-orange-400 lg:text-white lg:self-end lg:py-4 lg:px-2 lg:rounded-md lg:mx-4 lg:w-24 lg:text-xl lg:mt-4 lg:mb-4'
-              >
-                next
-              </button>
-            )}
+            {/*   <button
+              onClick={() => setIndex((prev) => prev + 1)}
+              className='lg:bg-orange-400 lg:text-white lg:self-end lg:py-4 lg:px-2 lg:rounded-md lg:mx-4 lg:w-24 lg:text-xl'
+            >
+              next
+            </button> */}
           </div>
         </div>
       )}
     </div>
   );
 }
+/* 
+
+  <WrongAnswer order={'a'} answer='sweden' />
+  <WrongAnswer order={'b'} answer='peru' />
+  <WrongAnswer order={'d'} answer='china' />
+
+*/
+
+/* 
+
+ <Answer
+                icon={'check'}
+                order={'a'}
+                answer={country}
+                className={
+                  active
+                    ? `flex justify-between border-2 border-green-500 bg-green-500 rounded-lg py-4 px-4 text-white items-center mx-4 my-2`
+                    : `flex border-2 border-purple-500 rounded-lg py-4 px-4 text-purple-400 items-center mx-4 my-2`
+                }
+                active={active}
+                toggleActive={(boolean) => isActive(boolean)}
+              />
+              <Answer
+                icon={'times'}
+                order={'b'}
+                answer={'sweden'}
+                className={
+                  active
+                    ? `flex justify-between border-2 border-red-500 bg-red-500 rounded-lg py-4 px-4 text-white items-center mx-4 my-2`
+                    : `flex border-2 border-purple-500 rounded-lg py-4 px-4 text-purple-400 items-center mx-4 my-2`
+                }
+                active={active}
+                toggleActive={(boolean) => isActive(boolean)}
+              />
+              <Answer
+                icon={'times'}
+                order={'c'}
+                answer={'china'}
+                className={
+                  active
+                    ? `flex justify-between border-2 border-red-500 bg-red-500 rounded-lg py-4 px-4 text-white items-center mx-4 my-2`
+                    : `flex border-2 border-purple-500 rounded-lg py-4 px-4 text-purple-400 items-center mx-4 my-2`
+                }
+                active={active}
+                toggleActive={(boolean) => isActive(boolean)}
+              />
+              <Answer
+                icon={'times'}
+                order={'d'}
+                answer={'peru'}
+                className={
+                  active
+                    ? `flex justify-between border-2 border-red-500 bg-red-500 rounded-lg py-4 px-4 text-white items-center mx-4 my-2`
+                    : `flex border-2 border-purple-500 rounded-lg py-4 px-4 text-purple-400 items-center mx-4 my-2`
+                }
+                active={active}
+                toggleActive={(boolean) => isActive(boolean)}
+              />
+
+
+*/
 
 export default App;
