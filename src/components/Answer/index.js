@@ -5,24 +5,31 @@ const Answer = ({ answer, order, icon, toggleActive, className, ...props }) => {
 
   return (
     <button
-      className={className}
+      className='flex border-2 border-purple-500 rounded-lg py-4 px-4 text-purple-400 items-center mx-4 my-2'
       onClick={(e) => {
         if (icon === 'check') {
           e.target.classList.add(
             'border-green-500',
             'bg-green-500',
-            'text-white'
+            'text-white',
+            'justify-between'
           );
           e.target.classList.remove(
             'border-purple-500',
             'text-purple-400',
             'text-purple'
           );
+          isActive(true);
         } else {
-          e.target.classList.add('border-red-500', 'bg-red-500', 'text-white');
+          e.target.classList.add(
+            'border-red-500',
+            'bg-red-500',
+            'text-white',
+            'justify-between'
+          );
           e.target.classList.remove('border-purple-500', 'text-purple-400');
+          isActive(true);
         }
-        isActive(true);
       }}
     >
       <span

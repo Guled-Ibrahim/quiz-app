@@ -26,6 +26,7 @@ function App() {
   const randomCountry = Random(countryList);
 
   useEffect(() => {
+    isLoading(true);
     setAnswers([]);
     Axios.get(`https://restcountries.com/v3.1/name/${randomCountry()}`).then(
       ({ data }) => {
@@ -70,11 +71,7 @@ function App() {
                     icon={'check'}
                     order={orderList[index + 1]}
                     answer={answer}
-                    className={
-                      active
-                        ? `flex justify-between border-2 rounded-lg py-4 px-4 items-center mx-4 my-2`
-                        : `flex border-2 border-purple-500 rounded-lg py-4 px-4 text-purple-400 items-center mx-4 my-2`
-                    }
+                    toggleActive={(value) => isActive(value)}
                   />
                 ) : (
                   <Answer
@@ -82,21 +79,16 @@ function App() {
                     icon={'times'}
                     order={orderList[index + 1]}
                     answer={answer}
-                    className={
-                      active
-                        ? `flex justify-between border-2 border-red-500 bg-red-500 rounded-lg py-4 px-4 text-white items-center mx-4 my-2`
-                        : `flex border-2 border-purple-500 rounded-lg py-4 px-4 text-purple-400 items-center mx-4 my-2`
-                    }
                   />
                 );
               })}
             </div>
-            {/*   <button
+            <button
               onClick={() => setIndex((prev) => prev + 1)}
               className='lg:bg-orange-400 lg:text-white lg:self-end lg:py-4 lg:px-2 lg:rounded-md lg:mx-4 lg:w-24 lg:text-xl'
             >
               next
-            </button> */}
+            </button>
           </div>
         </div>
       )}
