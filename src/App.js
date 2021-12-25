@@ -18,9 +18,10 @@ function App() {
   const [active, isActive] = useState(false);
   const [index, setIndex] = useState(1);
   const [answers, setAnswers] = useState([]);
-  const [showQuestion, isShowQuestion] = useState(false);
+  const [showQuestion, isShowQuestion] = useState(true);
   const [attempts, setAttempts] = useState(0);
   const [questionNumber, setQuestion] = useState(1);
+  /* add state for the next button */
 
   const orderList = {
     1: 'a',
@@ -57,12 +58,14 @@ function App() {
       }}
       className='h-screen w-screen lg:flex lg:items-center lg:flex-col lg:justify-center'
     >
-      <Confetti
-        width={window.screen.width}
-        height={window.screen.height}
-        recycle={false}
-        numberOfPieces={2000}
-      />
+      {!showQuestion && (
+        <Confetti
+          width={window.screen.width}
+          height={window.screen.height}
+          recycle={false}
+          numberOfPieces={2000}
+        />
+      )}
       {loading ? (
         <ClipLoader color={'white'} size={150} />
       ) : (
@@ -99,14 +102,25 @@ function App() {
                 })}
               </div>
               <button
-                onClick={() => setIndex((prev) => prev + 1)}
+                onClick={() => {
+                  if (index <= 5) {
+                    setIndex((prev) => prev + 1);
+                  } else {
+                    isShowQuestion(false);
+                  }
+                }}
                 className='lg:bg-orange-400 lg:text-white lg:self-end lg:py-4 lg:px-2 lg:rounded-md lg:mx-4 lg:w-24 lg:text-xl'
               >
                 next
               </button>
             </div>
           ) : (
-            <Result />
+            <Result
+              resetQuiz={(value, boolean) => {
+                setIndex(value);
+                isShowQuestion(boolean);
+              }}
+            />
           )}
         </div>
       )}

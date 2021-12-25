@@ -1,6 +1,6 @@
 import celebrate from '../../assets/celebrate.svg';
 
-const Result = () => {
+const Result = ({ resetQuiz }) => {
   return (
     <div className='flex flex-col'>
       <img
@@ -16,7 +16,10 @@ const Result = () => {
         <span className='text-green-500 text-2xl font-extrabold'>4</span>{' '}
         correct answers
       </p>
-      <button className='border-2 border-gray-500 w-2/4 py-2 px-2 mt-16 mb-8 self-center rounded-md'>
+      <button
+        onClick={() => resetQuiz(0, true)}
+        className='border-2 border-gray-500 w-2/4 py-2 px-2 mt-16 mb-8 self-center rounded-md'
+      >
         try again
       </button>
     </div>
