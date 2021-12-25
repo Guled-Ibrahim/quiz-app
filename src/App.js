@@ -6,8 +6,10 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import Random from 'no-duplicates';
 import countryList from './data/index';
 import shuffle from 'shuffle-array';
+import Confetti from 'react-confetti';
 import Answer from './components/Answer';
 import Result from './components/Result';
+import tweensFunctions from 'tween-functions';
 
 function App() {
   const [loading, isLoading] = useState(true);
@@ -17,7 +19,8 @@ function App() {
   const [index, setIndex] = useState(1);
   const [answers, setAnswers] = useState([]);
   const [showQuestion, isShowQuestion] = useState(false);
-  const [attempts, setAttempts] = useState(1);
+  const [attempts, setAttempts] = useState(0);
+  const [questionNumber, setQuestion] = useState(1);
 
   const orderList = {
     1: 'a',
@@ -54,6 +57,12 @@ function App() {
       }}
       className='h-screen w-screen lg:flex lg:items-center lg:flex-col lg:justify-center'
     >
+      <Confetti
+        width={window.screen.width}
+        height={window.screen.height}
+        recycle={false}
+        numberOfPieces={2000}
+      />
       {loading ? (
         <ClipLoader color={'white'} size={150} />
       ) : (
