@@ -1,12 +1,13 @@
+import { useState, useEffect } from 'react';
 import Background from './assets/background.png';
 import Man from './assets/man.svg';
-import Answer from './components/Answer';
-import { useState, useEffect } from 'react';
-import ClipLoader from 'react-spinners/ClipLoader';
 import Axios from 'axios';
+import ClipLoader from 'react-spinners/ClipLoader';
 import Random from 'no-duplicates';
 import countryList from './data/index';
 import shuffle from 'shuffle-array';
+import Answer from './components/Answer';
+import Result from './components/Result';
 
 function App() {
   const [loading, isLoading] = useState(true);
@@ -15,6 +16,8 @@ function App() {
   const [active, isActive] = useState(false);
   const [index, setIndex] = useState(1);
   const [answers, setAnswers] = useState([]);
+  const [showQuestion, isShowQuestion] = useState(false);
+  const [attempts, setAttempts] = useState(1);
 
   const orderList = {
     1: 'a',
@@ -58,38 +61,44 @@ function App() {
           <p className='capitalize lg:font-extrabold text-white lg:text-3xl lg:absolute lg:-top-12 lg:left-0'>
             Country quiz
           </p>
-          <img src={Man} alt='' className='lg:absolute lg:-top-24 right-0' />
-          <div className='lg:flex lg:flex-col lg:mx-2 lg:mb-4'>
-            <p className='text-purple-900 lg:font-extrabold lg:text-2xl lg:mt-12 lg:ml-4 lg:mb-8'>
-              {`${city} is the capital city of`}
-            </p>
-            <div className='flex flex-col'>
-              {shuffle(answers).map((answer, index) => {
-                return country === answer ? (
-                  <Answer
-                    key={index}
-                    icon={'check'}
-                    order={orderList[index + 1]}
-                    answer={answer}
-                    toggleActive={(value) => isActive(value)}
-                  />
-                ) : (
-                  <Answer
-                    key={index}
-                    icon={'times'}
-                    order={orderList[index + 1]}
-                    answer={answer}
-                  />
-                );
-              })}
+          {showQuestion && (
+            <img src={Man} alt='' className='lg:absolute lg:-top-24 right-0' />
+          )}
+          {showQuestion ? (
+            <div className='lg:flex lg:flex-col lg:mx-2 lg:mb-4'>
+              <p className='text-purple-900 lg:font-extrabold lg:text-2xl lg:mt-12 lg:ml-4 lg:mb-8'>
+                {`${city} is the capital city of`}
+              </p>
+              <div className='flex flex-col'>
+                {shuffle(answers).map((answer, index) => {
+                  return country === answer ? (
+                    <Answer
+                      key={index}
+                      icon={'check'}
+                      order={orderList[index + 1]}
+                      answer={answer}
+                      toggleActive={(value) => isActive(value)}
+                    />
+                  ) : (
+                    <Answer
+                      key={index}
+                      icon={'times'}
+                      order={orderList[index + 1]}
+                      answer={answer}
+                    />
+                  );
+                })}
+              </div>
+              <button
+                onClick={() => setIndex((prev) => prev + 1)}
+                className='lg:bg-orange-400 lg:text-white lg:self-end lg:py-4 lg:px-2 lg:rounded-md lg:mx-4 lg:w-24 lg:text-xl'
+              >
+                next
+              </button>
             </div>
-            <button
-              onClick={() => setIndex((prev) => prev + 1)}
-              className='lg:bg-orange-400 lg:text-white lg:self-end lg:py-4 lg:px-2 lg:rounded-md lg:mx-4 lg:w-24 lg:text-xl'
-            >
-              next
-            </button>
-          </div>
+          ) : (
+            <Result />
+          )}
         </div>
       )}
     </div>
