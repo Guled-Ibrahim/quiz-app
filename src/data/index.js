@@ -71,7 +71,6 @@ const countries = [
   'Chad',
   'Somalia',
   'Guinea',
-  'South',
   'Rwanda',
   'Cuba',
   'Tunisia',
