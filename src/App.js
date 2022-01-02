@@ -18,7 +18,6 @@ function App() {
   const [answers, setAnswers] = useState([]);
   const [showQuestion, isShowQuestion] = useState(true);
   const [showBtn, isShowBtn] = useState(false);
-  const [attempts, setAttempts] = useState();
 
   const orderList = {
     1: 'a',
@@ -91,6 +90,7 @@ function App() {
                       icon={answer === country ? 'check' : 'times'}
                       answer={answer}
                       country={country}
+                      toggleActive={(value) => isShowBtn(value)}
                     />
                   );
                 })}

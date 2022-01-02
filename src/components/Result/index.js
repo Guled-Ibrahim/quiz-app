@@ -11,9 +11,9 @@ const Result = ({ resetQuiz }) => {
       <h1 className='text-gray-900 text-4xl font-extrabold capitalize self-center'>
         results
       </h1>
-      <p className='self-center mt-2 text-purple-400 font-light'>
+      <p className='self-center mt-2 text-purple-500 font-light'>
         you got{' '}
-        <span className='text-green-500 text-2xl font-extrabold'>4</span>{' '}
+        <span className='text-green-500 text-2xl font-extrabold'>5</span>{' '}
         correct answers
       </p>
       <button
