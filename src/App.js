@@ -31,6 +31,7 @@ function App() {
   useEffect(() => {
     isLoading(true);
     setAnswers([]);
+    isShowBtn(false);
     Axios.get(`https://restcountries.com/v3.1/name/${randomCountry()}`).then(
       ({ data }) => {
         setCity(data[0].capital[0]);
